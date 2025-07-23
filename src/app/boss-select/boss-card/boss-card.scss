@@ -1,0 +1,21 @@
+.card {
+  outline-style: solid;
+  display: flex;
+  align-items: center;
+  outline-color: #1e1e1e;
+  max-width: 100%;
+  padding: 20px 30px 20px 30px;
+  background-color: #343a40;
+  border-radius: 20px;
+}
+
+.card-image {
+  height: 180px;
+  flex-shrink: 0;
+}
+
+.card-text {
+  font-size: 60px;
+  flex-grow: 1;
+  text-align: center;
+}

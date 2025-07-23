@@ -1,0 +1,6 @@
+.select-container {
+  padding: 100px 200px 0px 300px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 30px;
+}
