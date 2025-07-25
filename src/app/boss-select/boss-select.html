@@ -1,5 +1,15 @@
-<div class="select-container">
-  @for (boss of bossCards; track boss.id) {
-    <app-boss-card [item]="boss"></app-boss-card>
-  }
+<div>
+  <div class="filter">
+    <input
+      #query
+      type="text"
+      placeholder="Filter bosses..."
+      (input)="onSearchUpdated(query.value)"
+    />
+  </div>
+  <div class="select-container">
+    @for (boss of filteredBosses(); track boss.id) {
+      <app-boss-card [item]="boss"></app-boss-card>
+    }
+  </div>
 </div>

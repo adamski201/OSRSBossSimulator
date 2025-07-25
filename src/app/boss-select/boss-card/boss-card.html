@@ -1,4 +1,8 @@
 <div class="card">
-  <img [src]="item().imageUrl" class="card-image" />
-  <span class="card-text">{{ item().name }}</span>
+  <div class="card-left">
+    <img [src]="item().imageUrl" class="card-image" />
+  </div>
+  <div class="card-right">
+    <span class="card-text">{{ item().name }}</span>
+  </div>
 </div>

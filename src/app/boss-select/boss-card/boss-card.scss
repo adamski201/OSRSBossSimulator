@@ -4,18 +4,45 @@
   align-items: center;
   outline-color: #1e1e1e;
   max-width: 100%;
-  padding: 20px 30px 20px 30px;
+  height: 80px;
+  padding: 20px 20px 20px 30px;
   background-color: #343a40;
-  border-radius: 20px;
+  border-radius: 6px;
+  border: 1px solid rgb(130, 124, 124);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  transition:
+    background-color,
+    transform 0.2s;
+}
+
+.card:hover {
+  background-color: rgba(126, 106, 255, 0.2);
+  transform: translateY(-4px);
 }
 
 .card-image {
-  height: 180px;
-  flex-shrink: 0;
+  max-height: 80px;
 }
 
 .card-text {
-  font-size: 60px;
-  flex-grow: 1;
+  font-size: 1.7rem;
+  flex: 2;
   text-align: center;
+  line-height: 1;
+}
+
+.card-left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.card-right {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
 }
