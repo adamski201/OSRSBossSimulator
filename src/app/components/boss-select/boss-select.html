@@ -1,4 +1,10 @@
-<div>
+<div class="header-box">
+  <div class="select-header">
+    <span>Bosses</span>
+    <button class="header-button" (click)="toggleDropdown()">
+      {{ isOpen() ? "▾" : "▸" }}
+    </button>
+  </div>
   <div class="filter">
     <input
       #query
@@ -7,9 +13,11 @@
       (input)="onSearchUpdated(query.value)"
     />
   </div>
-  <div class="select-container">
+</div>
+@if (isOpen()) {
+  <div class="card-container fade-in">
     @for (boss of filteredBosses(); track boss.id) {
       <app-boss-card [item]="boss"></app-boss-card>
     }
   </div>
-</div>
+}

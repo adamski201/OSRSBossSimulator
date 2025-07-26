@@ -1,0 +1,64 @@
+.card-container {
+  padding: 30px 500px 0px 500px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 30px;
+  row-gap: 20px;
+}
+
+.header-box {
+  padding: 30px 500px 0 500px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+
+  .header-button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    cursor: pointer;
+    font-size: 50px;
+  }
+
+  .select-header {
+    grid-column: 2;
+    font-size: larger;
+    justify-self: center;
+    font-size: 50px;
+  }
+
+  .filter {
+    grid-column: 3;
+    display: flex;
+    justify-content: flex-end;
+
+    input {
+      background-color: #d6d7d7;
+      border-radius: 8px;
+      height: 30px;
+      width: 300px;
+      border: unset;
+    }
+
+    input:focus {
+      outline: none;
+      border: none;
+    }
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.15s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
