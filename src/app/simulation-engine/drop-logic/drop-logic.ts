@@ -9,5 +9,5 @@ export interface DropLogic {
    * @param context Context contaning state of the simulation (e.g. drops so far).
    * @returns A list of item IDs (or full DropItems) that were obtained in this roll.
    */
-  roll(dropTable: DropTableItem[], context?: SimulationContext): Drop[];
+  roll(dropTable: DropTableItem[], context: SimulationContext): Drop[];
 }

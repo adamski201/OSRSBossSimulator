@@ -1,7 +1,7 @@
 import { Routes } from "@angular/router";
 import { BossSelect } from "./components/boss-select/boss-select";
-import { SimulationConfigure } from "./components/simulation-configure/simulation-configure";
-import { Simulation } from "./components/simulation/simulation";
+import { SimulationConfigure } from "./components/configuration-page/simulation-configure";
+import { SimulationPage } from "./components/simulation-page/simulation-page";
 
 export const routes: Routes = [
   {
@@ -21,7 +21,7 @@ export const routes: Routes = [
   },
   {
     path: ":boss/simulation",
-    component: Simulation,
+    component: SimulationPage,
     pathMatch: "full",
   },
 ];

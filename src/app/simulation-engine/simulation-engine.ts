@@ -13,8 +13,8 @@ export class SimulationEngine {
     const simulationContext = new SimulationContext(numUniques);
 
     for (let i = 0; i < totalKills; i++) {
+      simulationContext.kc++; 
       const drops = dropLogic.roll(dropTable, simulationContext);
-      simulationContext.kc++;
       drops.forEach((drop) => simulationContext.addDrop(drop));
     }
 

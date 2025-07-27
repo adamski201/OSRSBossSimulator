@@ -1,0 +1,11 @@
+.app-content {
+  flex: 1;
+  display: flex;
+  padding: 0 30rem 0 30rem;
+  box-sizing: border-box;
+}
+
+.app-content > * {
+  width: 100%;
+  max-width: 960px;
+}

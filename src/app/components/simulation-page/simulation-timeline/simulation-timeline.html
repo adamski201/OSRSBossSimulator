@@ -1,0 +1,14 @@
+<div class="timeline-container">
+  @for (kill of kills(); track $index) {
+    <div class="pill-wrapper">
+      <div class="pill" [ngClass]="{ green: kill.isGreenlogKill }"></div>
+      @if (kill.kc % 10 === 0) {
+        <span class="kc-label">{{ kill.kc }}</span>
+      }
+    </div>
+  }
+
+  @for (item of drops(); track $index) {
+    <span>{{ item.item.name + " " + item.kc }}</span>
+  }
+</div>

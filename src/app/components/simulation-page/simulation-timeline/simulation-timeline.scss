@@ -1,0 +1,31 @@
+.timeline-container {
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+  justify-content: left;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pill {
+  background-color: gray;
+  width: 12px;
+  height: 24px;
+  border-radius: 100px;
+
+  &.green {
+    background-color: green;
+  }
+}
+
+.kc-label {
+  color: white;
+  font-size: 13px;
+  margin-top: 4px;
+}
