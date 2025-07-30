@@ -21,6 +21,6 @@ export class SimulationPage {
   constructor() {
     const bossId = this.route.snapshot.paramMap.get("boss")!;
     this.boss = BOSSES.find((b) => b.id === bossId)!;
-    this.simulation = this.simulationService.simulate(this.boss, 500);
+    this.simulation = this.simulationService.simulateUntilGreenlog(this.boss);
   }
 }

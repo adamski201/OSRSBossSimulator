@@ -1,14 +1,26 @@
-<div class="timeline-container">
+<div class="timeline-grid">
   @for (kill of kills(); track $index) {
-    <div class="pill-wrapper">
-      <div class="pill" [ngClass]="{ green: kill.isGreenlogKill }"></div>
+    <div class="cell-wrapper" [style.animationDelay]="kill.kc * 15 + 'ms'">
+      <div class="cell-images">
+        @for (drop of kill.drops; track $index) {
+          <img
+            class="cell-image"
+            [ngClass]="drop.isGreenlogDrop ? 'green-border' : 'invis-border'"
+            [src]="drop.item.imageUrl"
+            [title]="drop.item.name"
+          />
+        }
+      </div>
+      <div
+        class="cell-pill"
+        [ngClass]="{
+          green: kill.isGreenlogKill,
+          large: kill.kc % 10 === 0,
+        }"
+      ></div>
       @if (kill.kc % 10 === 0) {
-        <span class="kc-label">{{ kill.kc }}</span>
+        <span class="cell-label">{{ kill.kc }}</span>
       }
     </div>
-  }
-
-  @for (item of drops(); track $index) {
-    <span>{{ item.item.name + " " + item.kc }}</span>
   }
 </div>

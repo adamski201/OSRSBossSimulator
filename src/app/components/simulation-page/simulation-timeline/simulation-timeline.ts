@@ -28,6 +28,8 @@ export class SimulationTimeline {
     })) as DropView[];
   });
 
+  // Converts the simulation's drops into a timeline of kills
+  // Each kill contains its own drops and whether it was the first time an item dropped
   kills = computed(() => {
     const kills: Kill[] = [];
 

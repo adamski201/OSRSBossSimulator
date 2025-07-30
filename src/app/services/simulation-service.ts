@@ -14,4 +14,8 @@ export class SimulationService {
   simulate(boss: Boss, kc: number): SimulationResult {
     return this.simulationEngine.run(boss, kc);
   }
+
+  simulateUntilGreenlog(boss: Boss): SimulationResult {
+    return this.simulationEngine.runUntilGreenlog(boss);
+  }
 }
