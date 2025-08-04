@@ -1,11 +1,17 @@
-<div class="timeline-grid">
+<div
+  class="timeline-grid"
+  [ngClass]="{ 'background-fade-in': backgroundVisible() }"
+>
   @for (kill of kills(); track $index) {
-    <div class="cell-wrapper" [style.animationDelay]="kill.kc * 15 + 'ms'">
+    <div
+      class="cell-wrapper"
+      [style.animationDelay]="kill.kc * ANIMATION_DELAY + 'ms'"
+    >
       <div class="cell-images">
         @for (drop of kill.drops; track $index) {
           <img
             class="cell-image"
-            [ngClass]="drop.isGreenlogDrop ? 'green-border' : 'invis-border'"
+            [ngClass]="{ 'green-border': drop.isGreenlogDrop }"
             [src]="drop.item.imageUrl"
             [title]="drop.item.name"
           />

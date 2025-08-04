@@ -1,4 +1,4 @@
-import { Component, computed, input } from "@angular/core";
+import { Component, computed, effect, input, signal } from "@angular/core";
 import { SimulationResult } from "../../../simulation-engine/models/simulation-result";
 import { DropView } from "../../../models/drop-view";
 import { ITEM_MAP } from "../../../data/items";
@@ -14,10 +14,7 @@ import { CommonModule } from "@angular/common";
 })
 export class SimulationTimeline {
   simulation = input.required<SimulationResult>();
-
-  greenlogKc = computed(() => {
-    return this.simulation().greenLogKillCount;
-  });
+  ANIMATION_DELAY = 5;
 
   drops = computed(() => {
     return this.simulation().drops.map((drop) => ({
@@ -59,5 +56,25 @@ export class SimulationTimeline {
     }
 
     return kills;
+  });
+
+  constructor() {
+    effect((): void => {
+      this.backgroundVisible.set(false);
+      const delay = this.maxAnimationDelay();
+      if (delay === 0) return;
+
+      setTimeout(() => {
+        this.backgroundVisible.set(true);
+      }, delay + 200);
+    });
+  }
+
+  backgroundVisible = signal(false);
+
+  maxAnimationDelay = computed(() => {
+    const allKills = this.kills();
+    if (!allKills.length) return 0;
+    return allKills[allKills.length - 1].kc * this.ANIMATION_DELAY;
   });
 }

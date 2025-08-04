@@ -1,14 +1,14 @@
 .header-box {
-  background-color: #343a40;
+  background-color: #212020;
   min-height: 80px;
   display: flex;
   align-items: center;
   padding-left: 100px;
-  border-bottom: 1px solid rgb(89, 94, 98);
 }
 
 .header-text {
   color: white;
   font-size: 40px;
   font-weight: bold;
+  cursor: pointer;
 }

@@ -1,23 +1,20 @@
 .card {
-  outline-style: solid;
   display: flex;
   align-items: center;
-  outline-color: #1e1e1e;
   max-width: 100%;
   height: 80px;
   padding: 20px 20px 20px 30px;
-  background-color: #343a40;
-  border-radius: 6px;
-  border: 1px solid rgb(130, 124, 124);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  background-color: #212020;
+  border-radius: 15px;
+  cursor: pointer;
   transition:
     background-color,
-    transform 0.2s;
+    transform 0.4s;
 }
 
 .card:hover {
-  background-color: rgba(126, 106, 255, 0.2);
-  transform: translateY(-4px);
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }
 
 .card-image {
@@ -25,10 +22,11 @@
 }
 
 .card-text {
-  font-size: 1.7rem;
+  font-size: 35px;
   flex: 2;
   text-align: center;
   line-height: 1;
+  font-weight: 100;
 }
 
 .card-left {

@@ -8,28 +8,32 @@
 
 .timeline-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20px, 1fr));
+  grid-template-columns: repeat(50, 30px);
   row-gap: 20px;
-  flex-grow: 1;
+  background-color: transparent;
+  transition: background-color 0.8s ease-in-out;
+  border-radius: 50px;
+  padding: 20px 30px 0 30px;
+}
+
+.timeline-grid.background-fade-in {
+  background-color: #1a1919;
 }
 
 .cell-images {
   display: flex;
   flex-direction: column-reverse;
-}
 
-.cell-image {
-  height: 16px;
-  width: 16px;
+  .cell-image {
+    height: 20px;
+    width: 20px;
+    margin-top: 5px;
 
-  &.green-border {
-    border: 2px solid rgba(38, 195, 38, 0.278);
-    border-radius: 50%;
-  }
-
-  &.invis-border {
-    border: 2px solid rgba(255, 255, 255, 0);
-    border-radius: 50%;
+    &.green-border {
+      box-shadow: 0 0 6px 2px rgba(0, 255, 0, 0.5);
+      background-color: rgba(0, 255, 0, 0.1);
+      border-radius: 50%;
+    }
   }
 }
 
@@ -38,12 +42,13 @@
   grid-template-rows: 1fr 1fr 1fr;
   justify-items: center;
   row-gap: 6px;
+
   opacity: 0;
   animation: fadeInUp 0.5s ease forwards;
 }
 
 .cell-pill {
-  background-color: gray;
+  background-color: rgba(75, 73, 73, 0.5);
   width: 10px;
   height: 14px;
   border-radius: 100px;
@@ -59,7 +64,7 @@
 
 .cell-label {
   color: white;
-  font-size: 13px;
+  font-size: 15px;
   overflow: hidden;
 }
 
