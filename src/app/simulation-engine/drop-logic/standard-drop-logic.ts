@@ -1,4 +1,4 @@
-import { DropTableItem } from "../../models/drop-table-item";
+import { DropTableItem } from "../models/drop-table-item";
 import { Drop } from "../models/drop";
 import { RandomProvider } from "../random-provider";
 import { SimulationContext } from "../simulation-context";

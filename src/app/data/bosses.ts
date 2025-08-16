@@ -1,4 +1,4 @@
-import { Boss } from "../models/boss";
+import { Boss } from "../boss-simulation/models/boss";
 
 export const BOSSES: Boss[] = [
   {
@@ -48,3 +48,7 @@ export const BOSSES: Boss[] = [
     dropTable: [],
   },
 ];
+
+export const BOSSES_MAP = new Map<string, Boss>(
+  BOSSES.map((boss) => [boss.id, boss]),
+);

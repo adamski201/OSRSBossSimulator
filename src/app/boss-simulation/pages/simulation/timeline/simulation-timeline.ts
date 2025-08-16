@@ -1,10 +1,11 @@
-import { Component, computed, effect, input, signal } from "@angular/core";
-import { SimulationResult } from "../../../simulation-engine/models/simulation-result";
-import { DropView } from "../../../models/drop-view";
-import { ITEM_MAP } from "../../../data/items";
-import { Kill } from "../../../models/kill";
-import { Drop } from "../../../simulation-engine/models/drop";
 import { CommonModule } from "@angular/common";
+import { Component, computed, effect, input, signal } from "@angular/core";
+
+import { ITEM_MAP } from "../../../../data/items";
+import { Drop } from "../../../../simulation-engine/models/drop";
+import { SimulationResult } from "../../../../simulation-engine/models/simulation-result";
+import { DropView } from "./drop-view";
+import { Kill } from "./kill";
 
 @Component({
   selector: "app-simulation-timeline",
@@ -15,15 +16,6 @@ import { CommonModule } from "@angular/common";
 export class SimulationTimeline {
   simulation = input.required<SimulationResult>();
   ANIMATION_DELAY = 5;
-
-  drops = computed(() => {
-    return this.simulation().drops.map((drop) => ({
-      kc: drop.kc,
-      item: ITEM_MAP.get(drop.id)!,
-      isGreenlogDrop:
-        this.simulation().uniqueFirstObtainedAt.get(drop.id) === drop.kc,
-    })) as DropView[];
-  });
 
   // Converts the simulation's drops into a timeline of kills
   // Each kill contains its own drops and whether it was the first time an item dropped

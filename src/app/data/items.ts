@@ -1,4 +1,4 @@
-import { Item } from "../models/item";
+import { Item } from "../boss-simulation/models/item";
 
 export const ITEMS: Item[] = [
   { id: 23757, name: "Youngllef", imageUrl: "item-images/youngleff.webp" },

@@ -1,27 +1,32 @@
 import { Routes } from "@angular/router";
-import { BossSelect } from "./components/boss-select/boss-select";
-import { SimulationConfigure } from "./components/configuration-page/simulation-configure";
-import { SimulationPage } from "./components/simulation-page/simulation-page";
+import { ConfigurationPage } from "./boss-simulation/pages/configure/configuration-page";
+import { BossSelect } from "./boss-simulation/pages/select/boss-select";
+import { SimulationPage } from "./boss-simulation/pages/simulation/simulation-page";
+import { validateBossGuard } from "./boss-simulation/route-guard";
+import { SimulationQueryConfigResolver } from "./boss-simulation/pages/simulation/simulation-resolver";
 
 export const routes: Routes = [
   {
     path: "",
-    redirectTo: "bosses",
+    redirectTo: "select",
     pathMatch: "full",
   },
   {
-    path: "bosses",
+    path: "select",
     component: BossSelect,
     pathMatch: "full",
   },
   {
     path: ":boss/configure",
-    component: SimulationConfigure,
+    component: ConfigurationPage,
+    canActivate: [validateBossGuard],
     pathMatch: "full",
   },
   {
     path: ":boss/simulation",
     component: SimulationPage,
+    canActivate: [validateBossGuard],
+    resolve: { config: SimulationQueryConfigResolver },
     pathMatch: "full",
   },
 ];

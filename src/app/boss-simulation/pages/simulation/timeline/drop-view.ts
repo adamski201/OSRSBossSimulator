@@ -1,4 +1,4 @@
-import { Item } from "./item";
+import { Item } from "../../../models/item";
 
 export interface DropView {
   kc: number;

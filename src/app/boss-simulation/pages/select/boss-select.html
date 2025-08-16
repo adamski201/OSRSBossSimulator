@@ -17,7 +17,7 @@
 @if (isOpen()) {
   <div class="card-container fade-in">
     @for (boss of filteredBosses(); track boss.id) {
-      <app-boss-card [item]="boss"></app-boss-card>
+      <app-boss-card (select)="onSelect($event)" [item]="boss"></app-boss-card>
     }
   </div>
 }

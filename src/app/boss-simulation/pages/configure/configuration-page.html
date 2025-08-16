@@ -1,0 +1,32 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <label>
+    <input type="radio" formControlName="mode" value="greenlog" />
+    Run Until GreenLog
+  </label>
+  <label>
+    <input type="radio" formControlName="mode" value="numberOfKills" />
+    Run For Kills
+  </label>
+  <!-- <label>
+    <input type="radio" formControlName="mode" value="numberOfItems" />
+    Run For Items
+  </label> -->
+  @if (form.get("mode")?.value === "numberOfKills") {
+    <label>
+      <input type="number" formControlName="numberOfKills" />
+      KC
+    </label>
+  }
+  @if (form.get("mode")?.value === "numberOfItems") {
+    <label>
+      <input type="text" formControlName="numberOfItems" />
+      Items
+    </label>
+  }
+  <button type="submit">Submit</button>
+</form>
+
+<pre>
+Value: {{ form.value | json }}
+Status: {{ form.status }}
+</pre>

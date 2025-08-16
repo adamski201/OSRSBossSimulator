@@ -1,5 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 
+import { BOSSES } from "../../../data/bosses";
 import { SimulationService } from "./simulation-service";
 
 describe("Simulation", () => {
