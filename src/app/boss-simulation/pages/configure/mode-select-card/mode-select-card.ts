@@ -3,6 +3,7 @@ import {
   Component,
   forwardRef,
   input,
+  signal,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
@@ -24,19 +25,21 @@ export class ModeSelectCard implements ControlValueAccessor {
   title = input.required<string>();
   description = input.required<string>();
   imageUrl = input.required<string>();
-  value: any = input.required<any>();
+  private currentValue: string | null = null;
 
-  isSelected = false;
+  isSelected = signal(false);
   private onChange = (value: any) => {};
   private onTouched = () => {};
 
   onCardClick() {
-    this.onChange(this.value);
+    console.log("Card clicked!", this.currentValue);
+    this.onChange(this.currentValue);
     this.onTouched();
   }
 
   writeValue(value: any): void {
-    this.isSelected = this.value === value;
+    this.isSelected.set(this.currentValue === value);
+    console.log(this.isSelected());
   }
 
   registerOnChange(fn: any): void {

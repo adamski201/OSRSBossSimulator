@@ -45,7 +45,7 @@ export class ConfigurationPage {
 
   constructor() {
     this.form = new FormGroup({
-      mode: new FormControl("greenlog", Validators.required),
+      mode: new FormControl(null, Validators.required),
       numberOfKills: new FormControl({ value: null, disabled: true }, [
         requiredIfEnabled(),
       ]),
@@ -65,10 +65,6 @@ export class ConfigurationPage {
       if (mode === "numberOfKills") this.form.get("numberOfKills")?.enable();
       if (mode === "numberOfItems") this.form.get("numberOfItems")?.enable();
     });
-  }
-
-  onModeSelect(mode: string) {
-    this.form.controls["mode"].setValue(mode);
   }
 
   onSubmit() {

@@ -6,7 +6,6 @@
       description="Run Until GreenLog"
       imageUrl=""
       value="greenlog"
-      (click)="onModeSelect('greenlog')"
     ></app-mode-select-card>
     <app-mode-select-card
       formControlName="mode"
@@ -14,7 +13,6 @@
       description="numberOfKills"
       imageUrl=""
       value="numberOfKills"
-      (click)="onModeSelect('numberOfKills')"
     ></app-mode-select-card>
     <app-mode-select-card
       formControlName="mode"
@@ -22,7 +20,6 @@
       description="Run Until numberOfItems"
       imageUrl=""
       value="numberOfItems"
-      (click)="onModeSelect('numberOfItems')"
     ></app-mode-select-card>
   </div>
 
@@ -40,7 +37,7 @@
     </label>
   }
 
-  <button type="submit">Submit</button>
+  <button class="submit-button" type="submit">Submit</button>
 </form>
 
 <!-- <pre>
