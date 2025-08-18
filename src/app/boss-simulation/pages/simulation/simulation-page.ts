@@ -1,12 +1,12 @@
 import { Component, inject, signal } from "@angular/core";
 import { ActivatedRoute, RouterModule } from "@angular/router";
-import { BOSSES } from "../../../data/bosses";
 import { SimulationResult } from "../../../simulation-engine/models/simulation-result";
 import { Boss } from "../../models/boss";
-import { SimulationService } from "./simulation-service";
-import { SimulationTimeline } from "./timeline/simulation-timeline";
+
 import { BossService } from "../../boss-service";
 import { SimulationConfig } from "../configure/simulation-configuration";
+import { SimulationTimeline } from "./timeline/simulation-timeline";
+import { SimulationService } from "../../simulation-service";
 
 @Component({
   selector: "app-simulation-page",
@@ -26,9 +26,6 @@ export class SimulationPage {
   constructor() {
     this.boss.set(this.bossService.selectedBoss());
     this.simulationConfig = this.activatedRoute.snapshot.data["config"];
-    this.simulation = this.simulationService.run(
-      this.boss()!,
-      this.simulationConfig,
-    );
+    this.simulation = this.simulationService.run(this.boss()!);
   }
 }

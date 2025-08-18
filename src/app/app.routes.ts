@@ -3,7 +3,6 @@ import { ConfigurationPage } from "./boss-simulation/pages/configure/configurati
 import { BossSelect } from "./boss-simulation/pages/select/boss-select";
 import { SimulationPage } from "./boss-simulation/pages/simulation/simulation-page";
 import { validateBossGuard } from "./boss-simulation/route-guard";
-import { SimulationQueryConfigResolver } from "./boss-simulation/pages/simulation/simulation-resolver";
 
 export const routes: Routes = [
   {
@@ -26,7 +25,6 @@ export const routes: Routes = [
     path: ":boss/simulation",
     component: SimulationPage,
     canActivate: [validateBossGuard],
-    resolve: { config: SimulationQueryConfigResolver },
     pathMatch: "full",
   },
 ];

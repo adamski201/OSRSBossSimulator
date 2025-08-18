@@ -1,24 +1,25 @@
 import { Injectable } from "@angular/core";
-import { SimulationResult } from "../../../simulation-engine/models/simulation-result";
-import { SimulationEngine } from "../../../simulation-engine/simulation-engine";
-import { Boss } from "../../models/boss";
-import { SimulationConfig } from "../configure/simulation-configuration";
+import { SimulationResult } from "../simulation-engine/models/simulation-result";
+import { SimulationEngine } from "../simulation-engine/simulation-engine";
+import { Boss } from "./models/boss";
+import { SimulationConfig } from "./pages/configure/simulation-configuration";
 
 @Injectable({
   providedIn: "root",
 })
 export class SimulationService {
   public boss: Boss | undefined = undefined;
+  public config: SimulationConfig | undefined = undefined;
 
   private simulationEngine = new SimulationEngine();
 
-  run(boss: Boss, config: SimulationConfig): SimulationResult {
-    if (config.mode === "greenlog") {
+  run(boss: Boss): SimulationResult {
+    if (this.config?.mode === "greenlog") {
       return this.simulateUntilGreenlog(boss);
-    } else if (config.mode === "numberOfKills") {
-      return this.simulateForKills(boss, config.numberOfKills);
-    } else if (config.mode === "numberOfItems") {
-      return this.simulateUntilItems(boss, config.items);
+    } else if (this.config?.mode === "numberOfKills") {
+      return this.simulateForKills(boss, this.config.numberOfKills);
+    } else if (this.config?.mode === "numberOfItems") {
+      return this.simulateUntilItems(boss, this.config.items);
     }
 
     // Fallback to greenlog if no valid mode is provided

@@ -12,6 +12,8 @@ import { Router } from "@angular/router";
 import { BossService } from "../../boss-service";
 import { Boss } from "../../models/boss";
 import { SimulationConfig } from "./simulation-configuration";
+import { SimulationService } from "../../simulation-service";
+import { ModeSelectCard } from "./mode-select-card/mode-select-card";
 
 export function requiredIfEnabled(): ValidatorFn {
   return (control: AbstractControl) => {
@@ -29,7 +31,7 @@ export function requiredIfEnabled(): ValidatorFn {
 
 @Component({
   selector: "app-configuration-page",
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, ModeSelectCard],
   templateUrl: "./configuration-page.html",
   styleUrl: "./configuration-page.scss",
 })
@@ -39,6 +41,7 @@ export class ConfigurationPage {
 
   private router = inject(Router);
   private bossService = inject(BossService);
+  private simulationService = inject(SimulationService);
 
   constructor() {
     this.form = new FormGroup({
@@ -64,23 +67,16 @@ export class ConfigurationPage {
     });
   }
 
+  onModeSelect(mode: string) {
+    this.form.controls["mode"].setValue(mode);
+  }
+
   onSubmit() {
-    if (this.form.invalid) {
-      return;
-    }
+    if (this.form.invalid) return;
 
-    const mode = this.form.get("mode")?.value;
-    const queryParams: any = { mode };
+    const config = this.form.value as SimulationConfig;
+    this.simulationService.config = config;
 
-    if (mode === "numberOfKills") {
-      queryParams.numberOfKills = this.form.get("numberOfKills")?.value;
-    } else if (mode === "numberOfItems") {
-      const itemsMap = this.form.get("numberOfItems")?.value; // assuming it's a Map
-      if (itemsMap) {
-        queryParams.items = JSON.stringify(Object.fromEntries(itemsMap));
-      }
-    }
-
-    this.router.navigate(["/", this.boss()?.id, "simulation"], { queryParams });
+    this.router.navigate(["/", this.boss()?.id, "simulation"]);
   }
 }
