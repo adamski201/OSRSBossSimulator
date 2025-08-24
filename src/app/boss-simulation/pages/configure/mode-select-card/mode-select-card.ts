@@ -21,32 +21,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
   styleUrl: "./mode-select-card.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModeSelectCard implements ControlValueAccessor {
+export class ModeSelectCard {
   title = input.required<string>();
   description = input.required<string>();
   imageUrl = input.required<string>();
-  private currentValue: string | null = null;
 
-  isSelected = signal(false);
-  private onChange = (value: any) => {};
-  private onTouched = () => {};
-
-  onCardClick() {
-    console.log("Card clicked!", this.currentValue);
-    this.onChange(this.currentValue);
-    this.onTouched();
-  }
-
-  writeValue(value: any): void {
-    this.isSelected.set(this.currentValue === value);
-    console.log(this.isSelected());
-  }
-
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
-  }
+  isSelected = input<boolean>(false);
 }

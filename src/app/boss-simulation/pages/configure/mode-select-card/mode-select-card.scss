@@ -1,17 +1,30 @@
 .card {
   box-sizing: border-box;
-  padding: 10px 10px;
+  padding: 10px 30px;
   border: 1px solid #ccc;
   border-radius: 10px;
-  width: 300px;
+  width: 400px;
   height: 500px;
-  transition: background-color 0.05s;
+  transition:
+    background-color 0.05s,
+    transform 0.4s;
 
   &.selected {
-    background-color: #b0b0b0;
+    background-color: #58819f6d !important;
   }
 }
 
+.card-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.card-description {
+  text-align: center;
+}
+
 .card:hover {
-  background-color: #726e6e;
+  background-color: #726e6e2f;
+  transform: translateY(-4px);
 }

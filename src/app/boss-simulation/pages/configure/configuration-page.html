@@ -1,25 +1,25 @@
 <form class="form-container" [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="mode-card-container">
     <app-mode-select-card
-      formControlName="mode"
-      title="Greenlog"
-      description="Run Until GreenLog"
+      title="Run Until Greenlog"
+      description="Runs simulation until greenlog is achieved."
       imageUrl=""
-      value="greenlog"
+      [isSelected]="form.get('mode')?.value === 'greenlog'"
+      (click)="form.get('mode')?.setValue('greenlog')"
     ></app-mode-select-card>
     <app-mode-select-card
-      formControlName="mode"
-      title="numberOfKills"
-      description="numberOfKills"
+      title="Run Until X Kills"
+      description="Runs simulation until the specified number of kills is reached."
       imageUrl=""
-      value="numberOfKills"
+      [isSelected]="form.get('mode')?.value === 'numberOfKills'"
+      (click)="form.get('mode')?.setValue('numberOfKills')"
     ></app-mode-select-card>
     <app-mode-select-card
-      formControlName="mode"
-      title="numberOfItems"
-      description="Run Until numberOfItems"
+      title="Run Until X Items"
+      description="Runs simulation until the specified items are obtained."
       imageUrl=""
-      value="numberOfItems"
+      [isSelected]="form.get('mode')?.value === 'numberOfItems'"
+      (click)="form.get('mode')?.setValue('numberOfItems')"
     ></app-mode-select-card>
   </div>
 
@@ -37,10 +37,5 @@
     </label>
   }
 
-  <button class="submit-button" type="submit">Submit</button>
+  <button class="submit-button" type="submit">Run Simulation</button>
 </form>
-
-<!-- <pre>
-Value: {{ form.value | json }}
-Status: {{ form.status }}
-</pre> -->
