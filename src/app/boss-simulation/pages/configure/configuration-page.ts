@@ -89,7 +89,20 @@ export class ConfigurationPage {
     if (this.form.invalid) return;
 
     const config = this.form.value as SimulationConfig;
+
+    if (config.mode === "numberOfItems") {
+      const items = new Map(
+        (this.numberOfItemsArray.value as number[]).map((quantity, index) => [
+          this.bossItems()[index].id,
+          quantity,
+        ]),
+      );
+      config.items = items;
+    }
+
     this.simulationService.config = config;
+
+    console.log(config);
 
     this.router.navigate(["/", this.boss()?.id, "simulation"]);
   }

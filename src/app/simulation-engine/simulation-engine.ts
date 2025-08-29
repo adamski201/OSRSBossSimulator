@@ -65,18 +65,16 @@ export class SimulationEngine {
 
     const missingItems = new Map(itemQuantities);
 
-    while (missingItems.size > 0) {
+    while ([...missingItems.values()].some((qty) => qty > 0)) {
       simulationContext.kc++;
       const drops = dropLogic.roll(dropTable, simulationContext);
 
       for (const drop of drops) {
         simulationContext.addDrop(drop);
 
-        const currentQty = simulationContext.dropQuantities.get(drop.id) ?? 0;
-        const requiredQty = itemQuantities.get(drop.id);
-
-        if (requiredQty !== undefined && currentQty >= requiredQty) {
-          missingItems.delete(drop.id);
+        const remaining = missingItems.get(drop.id);
+        if (remaining !== undefined && remaining > 0) {
+          missingItems.set(drop.id, remaining - 1);
         }
       }
     }
