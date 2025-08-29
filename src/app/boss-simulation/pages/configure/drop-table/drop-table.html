@@ -1,0 +1,53 @@
+<div class="drop-table">
+  <h3>
+    @if (isReadonly) {
+      Item Quantities
+    } @else {
+      Target Item Quantities
+    }
+  </h3>
+  
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Quantity</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of items(); track item.id; let i = $index) {
+        <tr>
+          <td class="item-info">
+            <img [src]="item.imageUrl" [alt]="item.name" class="item-icon">
+            <span>{{ item.name }}</span>
+          </td>
+          <td class="quantity-input">
+            @if (isReadonly) {
+              <span class="quantity-display">
+                {{ quantities()?.[i] || 0 }}
+              </span>
+            } @else {
+              <input 
+                type="number" 
+                [formControl]="formArray()!.at(i)"
+                min="0"
+                class="quantity-field"
+                [class.invalid]="formArray()!.at(i).invalid && formArray()!.at(i).touched">
+              
+              @if (formArray()!.at(i).invalid && formArray()!.at(i).touched) {
+                <div class="error-message">
+                  @if (formArray()!.at(i).errors?.['required']) {
+                    Quantity is required
+                  }
+                  @if (formArray()!.at(i).errors?.['min']) {
+                    Quantity must be at least 0
+                  }
+                </div>
+              }
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
