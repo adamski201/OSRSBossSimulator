@@ -10,10 +10,10 @@
 .timeline-grid {
   display: grid;
   grid-template-columns: repeat(50, 30px);
-  row-gap: 20px;
+  row-gap: 5px;
   background-color: transparent;
   transition: background-color 0.8s ease-in-out;
-  border-radius: 50px;
+  border-radius: 30px;
   padding: 20px 30px 0 30px;
 }
 
@@ -40,7 +40,7 @@
 
 .cell-wrapper {
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: 2fr 1fr 1fr;
   justify-items: center;
   row-gap: 6px;
 
