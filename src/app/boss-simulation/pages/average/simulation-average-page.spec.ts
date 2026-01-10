@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { SimulationPage } from "./simulation-page";
+import { SimulationAveragePage } from "./simulation-average-page";
 
 describe("Simulation", () => {
-  let component: SimulationPage;
-  let fixture: ComponentFixture<SimulationPage>;
+  let component: SimulationAveragePage;
+  let fixture: ComponentFixture<SimulationAveragePage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SimulationPage],
+      imports: [SimulationAveragePage],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SimulationPage);
+    fixture = TestBed.createComponent(SimulationAveragePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

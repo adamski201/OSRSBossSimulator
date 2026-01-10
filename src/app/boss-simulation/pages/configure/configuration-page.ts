@@ -90,10 +90,16 @@ export class ConfigurationPage {
 
   onSubmit() {
     submit(this.simulationForm, async (form) => {
-      this.simulationService.setConfig(
-        this.mapFormToDomainModel(form().value()),
-      );
-      this.router.navigate(["/", this.boss()?.id, "simulation"]);
+      const config = this.mapFormToDomainModel(form().value());
+
+      // Navigate to the appropriate simulation page based on mode
+      const routePath =
+        config.simulationMode === SimulationMode.Average
+          ? "average"
+          : "timeline";
+      this.router.navigate(["/", this.boss()?.id, "simulation", routePath], {
+        state: { config },
+      });
     });
   }
 
