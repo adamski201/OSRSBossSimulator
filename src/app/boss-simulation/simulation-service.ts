@@ -9,21 +9,27 @@ import { SimulationConfig } from "./pages/configure/simulation-configuration";
 })
 export class SimulationService {
   public boss: Boss | undefined = undefined;
-  public config: SimulationConfig | undefined = undefined;
+  private config: SimulationConfig | undefined = undefined;
 
   private simulationEngine = new SimulationEngine();
 
   run(boss: Boss): SimulationResult {
-    if (this.config?.mode === "greenlog") {
+    const cfg = this.config;
+
+    if (cfg?.targetMode === "greenlog") {
       return this.simulateUntilGreenlog(boss);
-    } else if (this.config?.mode === "numberOfKills") {
-      return this.simulateForKills(boss, this.config.numberOfKills);
-    } else if (this.config?.mode === "numberOfItems") {
-      return this.simulateUntilItems(boss, this.config.items);
+    } else if (cfg?.targetMode === "numberOfKills" && cfg.numberOfKills) {
+      return this.simulateForKills(boss, cfg.numberOfKills);
+    } else if (cfg?.targetMode === "numberOfItems" && cfg.items) {
+      return this.simulateUntilItems(boss, cfg.items);
     }
 
     // Fallback to greenlog if no valid mode is provided
     return this.simulateUntilGreenlog(boss);
+  }
+
+  setConfig(config: SimulationConfig) {
+    this.config = config;
   }
 
   simulateUntilGreenlog(boss: Boss): SimulationResult {

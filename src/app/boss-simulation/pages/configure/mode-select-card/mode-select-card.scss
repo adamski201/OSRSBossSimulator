@@ -1,13 +1,11 @@
 .card {
   box-sizing: border-box;
-  padding: 5px 30px;
-  border: 1px solid #ccc;
+  padding: 0px 30px;
+  border: 1px solid #515151;
   border-radius: 10px;
   width: 400px;
-  height: 150px;
-  transition:
-    background-color 0.05s,
-    transform 0.4s;
+  height: 130px;
+  transition: background-color 0.05s;
 
   &.selected {
     background-color: #58819f6d !important;
@@ -26,5 +24,4 @@
 
 .card:hover {
   background-color: #726e6e2f;
-  transform: translateY(-4px);
 }

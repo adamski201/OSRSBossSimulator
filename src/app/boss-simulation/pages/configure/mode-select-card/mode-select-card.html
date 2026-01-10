@@ -1,4 +1,4 @@
-<div class="card" [class.selected]="isSelected()">
+<div class="card" (click)="select()" [class.selected]="isSelected()">
   <h3 class="card-title">{{ title() }}</h3>
   <p class="card-description">{{ description() }}</p>
 </div>

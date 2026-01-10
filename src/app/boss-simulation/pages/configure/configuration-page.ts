@@ -1,118 +1,116 @@
-import { CommonModule } from "@angular/common";
+import { JsonPipe } from "@angular/common";
 import { Component, computed, inject, signal } from "@angular/core";
 import {
   AbstractControl,
-  FormArray,
-  FormControl,
-  FormGroup,
   ReactiveFormsModule,
   ValidatorFn,
-  Validators,
 } from "@angular/forms";
+import {
+  form,
+  FormField,
+  hidden,
+  max,
+  min,
+  required,
+  submit,
+} from "@angular/forms/signals";
 import { Router } from "@angular/router";
 import { ITEM_MAP } from "../../../data/items";
 import { BossService } from "../../boss-service";
 import { Boss } from "../../models/boss";
 import { SimulationService } from "../../simulation-service";
-import { DropTable } from "./drop-table/drop-table";
 import { ModeSelectCard } from "./mode-select-card/mode-select-card";
-import { SimulationConfig, SimulationMode } from "./simulation-configuration";
+import {
+  SimulationConfig,
+  SimulationMode,
+  SimulationTarget,
+} from "./simulation-configuration";
 
-type ConfigurationFormModel = {
-  targetMode: FormControl<string | null>;
-  numberOfKills: FormControl<number | null>;
-  numberOfItems: FormArray<FormControl<number>>;
-};
-
-export function requiredIfEnabled(): ValidatorFn {
-  return (control: AbstractControl) => {
-    if (
-      control.enabled &&
-      (control.value === null ||
-        control.value === undefined ||
-        control.value === "")
-    ) {
-      return { required: true };
-    }
-    return null;
-  };
+interface SimulationFormModel {
+  simulationMode: SimulationMode;
+  targetMode: SimulationTarget;
+  numberOfKills: number;
+  numberOfItems: number[];
+  iterations: number;
 }
 
 @Component({
   selector: "app-configuration-page",
-  imports: [ReactiveFormsModule, CommonModule, ModeSelectCard, DropTable],
+  imports: [FormField, ReactiveFormsModule, ModeSelectCard],
   templateUrl: "./configuration-page.html",
   styleUrl: "./configuration-page.scss",
 })
 export class ConfigurationPage {
   boss = signal<Boss | undefined>(undefined);
-  form: FormGroup<ConfigurationFormModel>;
 
   private router = inject(Router);
   private bossService = inject(BossService);
   private simulationService = inject(SimulationService);
 
+  private model = signal<SimulationFormModel>({
+    simulationMode: SimulationMode.Timeline,
+    targetMode: SimulationTarget.Greenlog,
+    numberOfKills: 100,
+    numberOfItems: [],
+    iterations: 10000,
+  });
+
+  simulationForm = form(this.model, (simulation) => {
+    min(simulation.numberOfKills, 1, { message: "Must be at least 1" });
+    max(simulation.numberOfKills, 100000, {
+      message: "Must be at most 100,000",
+    });
+    min(simulation.iterations, 10000, { message: "Must be at least 10,000" });
+    max(simulation.iterations, 500000, { message: "Must be at most 500,000" });
+    required(simulation.numberOfItems);
+    hidden(
+      simulation.iterations,
+      ({ valueOf }) =>
+        valueOf(simulation.simulationMode) !== SimulationMode.Average,
+    );
+    hidden(
+      simulation.numberOfItems,
+      ({ valueOf }) =>
+        valueOf(simulation.targetMode) !== SimulationTarget.NumberOfItems,
+    );
+    hidden(
+      simulation.numberOfKills,
+      ({ valueOf }) =>
+        valueOf(simulation.targetMode) !== SimulationTarget.NumberOfKills,
+    );
+  });
+
   bossItems = computed(() =>
     this.boss()!.dropTable.map((item) => ITEM_MAP.get(item.id)!),
   );
 
-  constructor() {
-    this.form = new FormGroup<ConfigurationFormModel>({
-      targetMode: new FormControl<string | null>(null, {
-        validators: Validators.required,
-        nonNullable: false,
-      }),
-      numberOfKills: new FormControl<number | null>(null, {
-        validators: [requiredIfEnabled()],
-        nonNullable: false,
-      }),
-      numberOfItems: new FormArray<FormControl<number>>([], {
-        validators: [requiredIfEnabled()],
-      }),
-    });
-  }
-
   ngOnInit() {
     this.boss.set(this.bossService.selectedBoss());
-
-    const numberOfItemsArray = this.form.controls.numberOfItems;
-    this.bossItems().forEach(() => {
-      const control = new FormControl<number>(
-        { value: 0, disabled: true },
-        {
-          validators: [Validators.min(0), Validators.required],
-          nonNullable: true,
-        },
-      );
-      numberOfItemsArray.push(control);
-    });
-
-    this.form.controls.targetMode.valueChanges.subscribe((mode) => {
-      [SimulationMode.NumberOfKills, SimulationMode.NumberOfItems].forEach(
-        (control) => this.form.get(control)?.disable(),
-      );
-      if (mode === SimulationMode.NumberOfKills)
-        this.form.controls.numberOfKills?.enable();
-      if (mode === SimulationMode.NumberOfItems)
-        this.form.controls.numberOfItems?.enable();
-    });
   }
 
   onSubmit() {
-    if (this.form.invalid) return;
-
-    const config = this.form.value as SimulationConfig;
-
-    if (config.mode === SimulationMode.NumberOfItems) {
-      const items = new Map(
-        (this.form.controls.numberOfItems.value as number[]).map(
-          (quantity, index) => [this.bossItems()[index].id, quantity],
-        ),
+    submit(this.simulationForm, async (form) => {
+      this.simulationService.setConfig(
+        this.mapFormToDomainModel(form().value()),
       );
-      config.items = items;
-    }
+      this.router.navigate(["/", this.boss()?.id, "simulation"]);
+    });
+  }
 
-    this.simulationService.config = config;
-    this.router.navigate(["/", this.boss()?.id, "simulation"]);
+  private mapFormToDomainModel(value: SimulationFormModel): SimulationConfig {
+    const items = new Map(
+      value.numberOfItems.map((quantity, index) => [
+        this.bossItems()[index].id,
+        quantity,
+      ]),
+    );
+
+    return {
+      simulationMode: value.simulationMode,
+      targetMode: value.targetMode,
+      numberOfKills: value.numberOfKills,
+      items,
+      iterations: value.iterations,
+    };
   }
 }

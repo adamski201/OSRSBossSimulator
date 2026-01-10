@@ -1,42 +1,77 @@
-<form class="form-container" [formGroup]="form" (ngSubmit)="onSubmit()">
+<form (submit)="onSubmit()" class="form-container">
+  <h2>Simulation Mode</h2>
   <div class="mode-card-container">
     <app-mode-select-card
-      title="Run Until Greenlog"
-      description="Runs simulation until greenlog is achieved."
+      title="Timeline"
+      mode="timeline"
+      description="Generate a timeline of drops and statistics."
       imageUrl=""
-      [isSelected]="form.value.targetMode === 'greenlog'"
-      (click)="form.patchValue({ targetMode: 'greenlog' })"
+      [isSelected]="simulationForm().value().simulationMode === 'timeline'"
+      [formField]="simulationForm.simulationMode"
     ></app-mode-select-card>
     <app-mode-select-card
-      title="Run Until X Kills"
-      description="Runs simulation until the specified number of kills is reached."
+      title="Average"
+      mode="average"
+      description="Calculate average drops and statistics."
       imageUrl=""
-      [isSelected]="form.value.targetMode === 'numberOfKills'"
-      (click)="form.patchValue({ targetMode: 'numberOfKills' })"
-    ></app-mode-select-card>
-    <app-mode-select-card
-      title="Run Until X Items"
-      description="Runs simulation until the specified items are obtained."
-      imageUrl=""
-      [isSelected]="form.value.targetMode === 'numberOfItems'"
-      (click)="form.patchValue({ targetMode: 'numberOfItems' })"
+      [isSelected]="simulationForm().value().simulationMode === 'average'"
+      [formField]="simulationForm.simulationMode"
     ></app-mode-select-card>
   </div>
 
-  @if (form.value.targetMode === "numberOfKills") {
-    <label>
-      <input type="number" formControlName="numberOfKills" />
-      KC
-    </label>
-  }
+  <label
+    [style.visibility]="
+      simulationForm.iterations().hidden() ? 'hidden' : 'visible'
+    "
+  >
+    <input type="number" [formField]="simulationForm.iterations" />
+    Trials
+  </label>
 
-  @if (form.value.targetMode === "numberOfItems") {
-    <app-drop-table
+  <h2>Simulation Target</h2>
+  <div class="mode-card-container">
+    <app-mode-select-card
+      title="Run Until Greenlog"
+      mode="greenlog"
+      description="Runs simulation until greenlog is achieved."
+      imageUrl=""
+      [isSelected]="simulationForm().value().targetMode === 'greenlog'"
+      [formField]="simulationForm.targetMode"
+    ></app-mode-select-card>
+    <app-mode-select-card
+      title="Run Until X Kills"
+      mode="numberOfKills"
+      description="Runs simulation until the specified number of kills is reached."
+      imageUrl=""
+      [isSelected]="simulationForm().value().targetMode === 'numberOfKills'"
+      [formField]="simulationForm.targetMode"
+    ></app-mode-select-card>
+    <app-mode-select-card
+      title="Run Until X Items"
+      mode="numberOfItems"
+      description="Runs simulation until the specified items are obtained."
+      imageUrl=""
+      [isSelected]="simulationForm().value().targetMode === 'numberOfItems'"
+      [formField]="simulationForm.targetMode"
+    ></app-mode-select-card>
+  </div>
+
+  <label
+    [style.visibility]="
+      simulationForm.numberOfKills().hidden() ? 'hidden' : 'visible'
+    "
+  >
+    <input type="number" [formField]="simulationForm.numberOfKills" />
+    KC
+  </label>
+
+  @if (!simulationForm.numberOfItems().hidden()) {
+    <!-- <app-drop-table
       [items]="bossItems()"
-      [formArray]="form.controls.numberOfItems"
+      [formArray]="simulationForm.controls.numberOfItems"
     >
-    </app-drop-table>
+    </app-drop-table> -->
   }
 
-  <button class="submit-button" type="submit">Run Simulation</button>
+  <button class="submit-button">Run Simulation</button>
 </form>

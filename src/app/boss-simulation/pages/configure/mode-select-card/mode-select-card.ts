@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, input } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  model,
+} from "@angular/core";
+import { FormValueControl } from "@angular/forms/signals";
 
 @Component({
   selector: "app-mode-select-card",
@@ -6,9 +12,16 @@ import { ChangeDetectionStrategy, Component, input } from "@angular/core";
   styleUrl: "./mode-select-card.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModeSelectCard {
+export class ModeSelectCard implements FormValueControl<string> {
+  value = model("");
+
   title = input.required<string>();
+  mode = input.required<string>();
   description = input.required<string>();
   imageUrl = input<string | null>(null);
   isSelected = input<boolean>(false);
+
+  select() {
+    this.value.set(this.mode());
+  }
 }

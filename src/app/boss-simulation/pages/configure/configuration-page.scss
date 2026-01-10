@@ -1,9 +1,10 @@
 .mode-card-container {
-  margin: 40px 0 0 0;
+  margin: 20px 0 20px 0;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  gap: 80px;
+  column-gap: 40px;
+  row-gap: 20px;
   width: 100%;
   justify-content: center;
 }
@@ -12,6 +13,10 @@
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+h2 {
+  margin-bottom: 0;
 }
 
 .form-container {
@@ -36,4 +41,13 @@
 
 .submit-button:hover {
   background-color: #7b7979;
+}
+
+input {
+  width: 60px;
+}
+
+input[type="number"] {
+  padding: 2px 8px;
+  margin-right: 5px;
 }
