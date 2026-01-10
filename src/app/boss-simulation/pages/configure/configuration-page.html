@@ -4,34 +4,37 @@
       title="Run Until Greenlog"
       description="Runs simulation until greenlog is achieved."
       imageUrl=""
-      [isSelected]="form.get('mode')?.value === 'greenlog'"
-      (click)="form.get('mode')?.setValue('greenlog')"
+      [isSelected]="form.value.targetMode === 'greenlog'"
+      (click)="form.patchValue({ targetMode: 'greenlog' })"
     ></app-mode-select-card>
     <app-mode-select-card
       title="Run Until X Kills"
       description="Runs simulation until the specified number of kills is reached."
       imageUrl=""
-      [isSelected]="form.get('mode')?.value === 'numberOfKills'"
-      (click)="form.get('mode')?.setValue('numberOfKills')"
+      [isSelected]="form.value.targetMode === 'numberOfKills'"
+      (click)="form.patchValue({ targetMode: 'numberOfKills' })"
     ></app-mode-select-card>
     <app-mode-select-card
       title="Run Until X Items"
       description="Runs simulation until the specified items are obtained."
       imageUrl=""
-      [isSelected]="form.get('mode')?.value === 'numberOfItems'"
-      (click)="form.get('mode')?.setValue('numberOfItems')"
+      [isSelected]="form.value.targetMode === 'numberOfItems'"
+      (click)="form.patchValue({ targetMode: 'numberOfItems' })"
     ></app-mode-select-card>
   </div>
 
-  @if (form.get("mode")?.value === "numberOfKills") {
+  @if (form.value.targetMode === "numberOfKills") {
     <label>
       <input type="number" formControlName="numberOfKills" />
       KC
     </label>
   }
 
-  @if (form.get("mode")?.value === "numberOfItems") {
-    <app-drop-table [items]="bossItems()" [formArray]="numberOfItemsArray">
+  @if (form.value.targetMode === "numberOfItems") {
+    <app-drop-table
+      [items]="bossItems()"
+      [formArray]="form.controls.numberOfItems"
+    >
     </app-drop-table>
   }
 

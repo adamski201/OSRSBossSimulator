@@ -16,7 +16,13 @@ import { Boss } from "../../models/boss";
 import { SimulationService } from "../../simulation-service";
 import { DropTable } from "./drop-table/drop-table";
 import { ModeSelectCard } from "./mode-select-card/mode-select-card";
-import { SimulationConfig } from "./simulation-configuration";
+import { SimulationConfig, SimulationMode } from "./simulation-configuration";
+
+type ConfigurationFormModel = {
+  targetMode: FormControl<string | null>;
+  numberOfKills: FormControl<number | null>;
+  numberOfItems: FormArray<FormControl<number>>;
+};
 
 export function requiredIfEnabled(): ValidatorFn {
   return (control: AbstractControl) => {
@@ -40,7 +46,7 @@ export function requiredIfEnabled(): ValidatorFn {
 })
 export class ConfigurationPage {
   boss = signal<Boss | undefined>(undefined);
-  form: FormGroup;
+  form: FormGroup<ConfigurationFormModel>;
 
   private router = inject(Router);
   private bossService = inject(BossService);
@@ -51,38 +57,45 @@ export class ConfigurationPage {
   );
 
   constructor() {
-    this.form = new FormGroup({
-      mode: new FormControl<string | null>(null, Validators.required),
-      numberOfKills: new FormControl<number | null>(null, [
-        requiredIfEnabled(),
-      ]),
-      numberOfItems: new FormArray([], { validators: [requiredIfEnabled()] }),
+    this.form = new FormGroup<ConfigurationFormModel>({
+      targetMode: new FormControl<string | null>(null, {
+        validators: Validators.required,
+        nonNullable: false,
+      }),
+      numberOfKills: new FormControl<number | null>(null, {
+        validators: [requiredIfEnabled()],
+        nonNullable: false,
+      }),
+      numberOfItems: new FormArray<FormControl<number>>([], {
+        validators: [requiredIfEnabled()],
+      }),
     });
   }
 
   ngOnInit() {
     this.boss.set(this.bossService.selectedBoss());
 
-    const numberOfItemsArray = this.form.get("numberOfItems") as FormArray;
-    this.bossItems().forEach((item, index) => {
-      const control = new FormControl({ value: 0, disabled: true }, [
-        Validators.min(0),
-        Validators.required,
-      ]);
+    const numberOfItemsArray = this.form.controls.numberOfItems;
+    this.bossItems().forEach(() => {
+      const control = new FormControl<number>(
+        { value: 0, disabled: true },
+        {
+          validators: [Validators.min(0), Validators.required],
+          nonNullable: true,
+        },
+      );
       numberOfItemsArray.push(control);
     });
 
-    this.form.get("mode")?.valueChanges.subscribe((mode) => {
-      ["numberOfKills", "numberOfItems"].forEach((control) =>
-        this.form.get(control)?.disable(),
+    this.form.controls.targetMode.valueChanges.subscribe((mode) => {
+      [SimulationMode.NumberOfKills, SimulationMode.NumberOfItems].forEach(
+        (control) => this.form.get(control)?.disable(),
       );
-      if (mode === "numberOfKills") this.form.get("numberOfKills")?.enable();
-      if (mode === "numberOfItems") this.form.get("numberOfItems")?.enable();
+      if (mode === SimulationMode.NumberOfKills)
+        this.form.controls.numberOfKills?.enable();
+      if (mode === SimulationMode.NumberOfItems)
+        this.form.controls.numberOfItems?.enable();
     });
-  }
-
-  get numberOfItemsArray() {
-    return this.form.get("numberOfItems") as FormArray<FormControl<number>>;
   }
 
   onSubmit() {
@@ -90,20 +103,16 @@ export class ConfigurationPage {
 
     const config = this.form.value as SimulationConfig;
 
-    if (config.mode === "numberOfItems") {
+    if (config.mode === SimulationMode.NumberOfItems) {
       const items = new Map(
-        (this.numberOfItemsArray.value as number[]).map((quantity, index) => [
-          this.bossItems()[index].id,
-          quantity,
-        ]),
+        (this.form.controls.numberOfItems.value as number[]).map(
+          (quantity, index) => [this.bossItems()[index].id, quantity],
+        ),
       );
       config.items = items;
     }
 
     this.simulationService.config = config;
-
-    console.log(config);
-
     this.router.navigate(["/", this.boss()?.id, "simulation"]);
   }
 }

@@ -1,6 +1,13 @@
 import { CommonModule } from "@angular/common";
-import { Component, computed, effect, input, signal } from "@angular/core";
-
+import {
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  input,
+  signal,
+  viewChild,
+} from "@angular/core";
 import { ITEM_MAP } from "../../../../data/items";
 import { Drop } from "../../../../simulation-engine/models/drop";
 import { SimulationResult } from "../../../../simulation-engine/models/simulation-result";
@@ -15,10 +22,16 @@ import { Kill } from "./kill";
 })
 export class SimulationTimeline {
   simulation = input.required<SimulationResult>();
+  backgroundVisible = signal(false);
+
+  timeline = viewChild.required<ElementRef>("timeline");
+
   ANIMATION_DELAY = 5;
 
-  // Converts the simulation's drops into a timeline of kills
-  // Each kill contains its own drops and whether it was the first time an item dropped
+  maxAnimationDelay = computed(() => {
+    return this.kills().length * this.ANIMATION_DELAY;
+  });
+
   kills = computed(() => {
     const kills: Kill[] = [];
 
@@ -54,19 +67,16 @@ export class SimulationTimeline {
     effect((): void => {
       this.backgroundVisible.set(false);
       const delay = this.maxAnimationDelay();
+
       if (delay === 0) return;
 
       setTimeout(() => {
         this.backgroundVisible.set(true);
+        this.timeline().nativeElement.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+        });
       }, delay + 200);
     });
   }
-
-  backgroundVisible = signal(false);
-
-  maxAnimationDelay = computed(() => {
-    const allKills = this.kills();
-    if (!allKills.length) return 0;
-    return allKills[allKills.length - 1].kc * this.ANIMATION_DELAY;
-  });
 }

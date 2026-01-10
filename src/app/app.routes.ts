@@ -1,6 +1,6 @@
 import { Routes } from "@angular/router";
 import { ConfigurationPage } from "./boss-simulation/pages/configure/configuration-page";
-import { BossSelect } from "./boss-simulation/pages/select/boss-select";
+import { BossSelect } from "./boss-simulation/pages/boss-selection/boss-select";
 import { SimulationPage } from "./boss-simulation/pages/simulation/simulation-page";
 import { validateBossGuard } from "./boss-simulation/route-guard";
 

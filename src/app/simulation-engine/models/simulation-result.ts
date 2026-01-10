@@ -1,7 +1,6 @@
 import { Drop } from "./drop";
 
 export interface SimulationResult {
-  bossId: string;
   killCount: number;
   drops: Drop[];
   isGreenLogComplete: boolean;
@@ -9,3 +8,9 @@ export interface SimulationResult {
   dropQuantities: Map<number, number>;
   uniqueFirstObtainedAt: Map<number, number>;
 }
+
+export interface AveragedSimulationResult {
+  killCount: number;
+  dropQuantities: Map<number, number>;
+}
+

@@ -1,8 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
 @Component({
   selector: "app-mode-select-card",
@@ -13,7 +9,6 @@ import {
 export class ModeSelectCard {
   title = input.required<string>();
   description = input.required<string>();
-  imageUrl = input.required<string>();
-
+  imageUrl = input<string | null>(null);
   isSelected = input<boolean>(false);
 }

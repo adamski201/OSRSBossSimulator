@@ -1,6 +1,9 @@
 import { Boss } from "../boss-simulation/models/boss";
 import { StandardDropLogic } from "./drop-logic/standard-drop-logic";
-import { SimulationResult } from "./models/simulation-result";
+import {
+  AveragedSimulationResult,
+  SimulationResult,
+} from "./models/simulation-result";
 import { RandomProvider } from "./random-provider";
 import { SimulationContext } from "./simulation-context";
 
@@ -19,7 +22,6 @@ export class SimulationEngine {
     }
 
     return {
-      bossId: boss.id,
       killCount: simulationContext.kc,
       drops: simulationContext.drops,
       greenLogKillCount: simulationContext.greenLogKc,
@@ -27,6 +29,24 @@ export class SimulationEngine {
       uniqueFirstObtainedAt: simulationContext.uniqueFirstObtainedAt,
       isGreenLogComplete: !!simulationContext.greenLogKc,
     };
+  }
+
+  runForKillsAveraged(
+    boss: Boss,
+    totalKills: number,
+    trials = 100000,
+  ): AveragedSimulationResult {
+    const kc = totalKills;
+    const dropQuantities = new Map<number, number>();
+
+    for (let i = 0; i < trials; i++) {
+      const result = this.runForKills(boss, totalKills);
+      result.dropQuantities.forEach((qty, itemId) => {
+        dropQuantities.set(itemId, dropQuantities.get(itemId) ?? 0 + qty);
+      });
+    }
+
+    return { killCount: kc, dropQuantities };
   }
 
   runUntilGreenlog(boss: Boss): SimulationResult {
@@ -43,7 +63,6 @@ export class SimulationEngine {
     }
 
     return {
-      bossId: boss.id,
       killCount: simulationContext.kc,
       drops: simulationContext.drops,
       greenLogKillCount: simulationContext.greenLogKc,
@@ -51,6 +70,25 @@ export class SimulationEngine {
       uniqueFirstObtainedAt: simulationContext.uniqueFirstObtainedAt,
       isGreenLogComplete: true,
     };
+  }
+
+  runUntilGreenlogAveraged(
+    boss: Boss,
+    trials = 100000,
+  ): AveragedSimulationResult {
+    let kc = 0;
+    const dropQuantities = new Map<number, number>();
+
+    for (let i = 0; i < trials; i++) {
+      const result = this.runUntilGreenlog(boss);
+
+      kc += result.killCount;
+      result.dropQuantities.forEach((qty, itemId) => {
+        dropQuantities.set(itemId, dropQuantities.get(itemId) ?? 0 + qty);
+      });
+    }
+
+    return { killCount: kc / trials, dropQuantities };
   }
 
   runUntilItems(
@@ -80,7 +118,6 @@ export class SimulationEngine {
     }
 
     return {
-      bossId: boss.id,
       killCount: simulationContext.kc,
       drops: simulationContext.drops,
       greenLogKillCount: simulationContext.greenLogKc,
@@ -88,6 +125,26 @@ export class SimulationEngine {
       uniqueFirstObtainedAt: simulationContext.uniqueFirstObtainedAt,
       isGreenLogComplete: true,
     };
+  }
+
+  runUntilItemsAveraged(
+    boss: Boss,
+    itemQuantities: Map<number, number>,
+    trials = 100000,
+  ): AveragedSimulationResult {
+    let kc = 0;
+    const dropQuantities = new Map<number, number>();
+
+    for (let i = 0; i < trials; i++) {
+      const result = this.runUntilItems(boss, itemQuantities);
+
+      kc += result.killCount;
+      result.dropQuantities.forEach((qty, itemId) => {
+        dropQuantities.set(itemId, dropQuantities.get(itemId) ?? 0 + qty);
+      });
+    }
+
+    return { killCount: kc / trials, dropQuantities };
   }
 
   private getStandardDropLogic() {
