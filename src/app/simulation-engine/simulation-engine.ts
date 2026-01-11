@@ -42,7 +42,7 @@ export class SimulationEngine {
     for (let i = 0; i < trials; i++) {
       const result = this.runForKills(boss, totalKills);
       result.dropQuantities.forEach((qty, itemId) => {
-        dropQuantities.set(itemId, dropQuantities.get(itemId) ?? 0 + qty);
+        dropQuantities.set(itemId, (dropQuantities.get(itemId) ?? 0) + qty);
       });
     }
 
