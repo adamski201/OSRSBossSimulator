@@ -11,3 +11,7 @@
     filter: brightness(0) invert(1);
   "
 />
+
+{{ (simulation | async)?.killCount }}
+
+{{ (simulation | async)?.dropQuantities | keyvalue | json }}

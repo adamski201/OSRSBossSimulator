@@ -1,27 +1,26 @@
 import { Component, inject, signal } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import {
-  AveragedSimulationResult,
-  SimulationResult,
-} from "../../../simulation-engine/models/simulation-result";
+import { AveragedSimulationResult } from "../../../../simulation-engine/models/simulation-result";
 import { Boss } from "../../models/boss";
 
-import { ITEM_MAP } from "../../../data/items";
+import { AsyncPipe, JsonPipe, KeyValuePipe } from "@angular/common";
+import { Observable, tap } from "rxjs";
 import { BossService } from "../../boss-service";
-import { Item } from "../../models/item";
 import { SimulationService } from "../../simulation-service";
 import { SimulationConfig } from "../configure/simulation-configuration";
 
 @Component({
   selector: "app-simulation-average-page",
-  imports: [RouterModule],
+  imports: [RouterModule, AsyncPipe, KeyValuePipe, JsonPipe],
   templateUrl: "./simulation-average-page.html",
   styleUrl: "./simulation-average-page.scss",
 })
 export class SimulationAveragePage {
   boss = signal<Boss | undefined>(undefined);
-  simulation: SimulationResult | AveragedSimulationResult;
-  items: Item[] = [];
+  simulation:
+    | Observable<AveragedSimulationResult & { progress: number }>
+    | undefined;
+
   private bossService = inject(BossService);
   private simulationService = inject(SimulationService);
 
@@ -31,9 +30,12 @@ export class SimulationAveragePage {
 
     this.boss.set(this.bossService.selectedBoss());
 
-    this.simulation = this.simulationService.runAveraged(this.boss()!, config);
-
-    const itemIds = this.simulation.dropQuantities.keys();
-    this.items = Array.from(itemIds).map((id) => ITEM_MAP.get(id)!);
+    this.simulation = this.simulationService
+      .runAveraged(this.boss()!, config)
+      .pipe(
+        tap((result) => {
+          console.log(result);
+        }),
+      );
   }
 }

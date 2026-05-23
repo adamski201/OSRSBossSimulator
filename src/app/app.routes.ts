@@ -1,14 +1,15 @@
 import { Routes } from "@angular/router";
-import { ConfigurationPage } from "./boss-simulation/pages/configure/configuration-page";
-import { BossSelect } from "./boss-simulation/pages/boss-selection/boss-select";
-import { SimulationTimelinePage } from "./boss-simulation/pages/timeline/simulation-timeline-page";
-import { validateBossGuard } from "./boss-simulation/route-guard";
-import { SimulationAveragePage } from "./boss-simulation/pages/average/simulation-average-page";
+import { ConfigurationPage } from "./features/boss-simulation/pages/configure/configuration-page";
+import { BossSelect } from "./features/boss-simulation/pages/boss-selection/boss-select";
+import { SimulationTimelinePage } from "./features/boss-simulation/pages/timeline/simulation-timeline-page";
+import { validateBossGuard } from "./features/boss-simulation/route-guard";
+import { SimulationAveragePage } from "./features/boss-simulation/pages/average/simulation-average-page";
+import { SeaweedCalculatorPage } from "./features/seaweed-calculator/seaweed-calculator-page/seaweed-calculator-page";
 
 export const routes: Routes = [
   {
     path: "",
-    redirectTo: "select",
+    redirectTo: "",
     pathMatch: "full",
   },
   {
@@ -32,6 +33,11 @@ export const routes: Routes = [
     path: ":boss/simulation/average",
     component: SimulationAveragePage,
     canActivate: [validateBossGuard],
+    pathMatch: "full",
+  },
+  {
+    path: "seaweed-calculator",
+    component: SeaweedCalculatorPage,
     pathMatch: "full",
   },
 ];

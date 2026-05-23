@@ -1,4 +1,4 @@
-import { Boss } from "../boss-simulation/models/boss";
+import { Boss } from "../features/boss-simulation/models/boss";
 
 export const BOSSES: Boss[] = [
   {

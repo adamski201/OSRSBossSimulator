@@ -8,9 +8,9 @@ import {
   signal,
   viewChild,
 } from "@angular/core";
-import { ITEM_MAP } from "../../../../data/items";
-import { Drop } from "../../../../simulation-engine/models/drop";
-import { SimulationResult } from "../../../../simulation-engine/models/simulation-result";
+import { ITEM_MAP } from "../../../../../data/items";
+import { Drop } from "../../../../../simulation-engine/models/drop";
+import { SimulationResult } from "../../../../../simulation-engine/models/simulation-result";
 import { DropView } from "./drop-view";
 import { Kill } from "./kill";
 

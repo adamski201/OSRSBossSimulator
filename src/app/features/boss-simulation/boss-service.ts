@@ -1,5 +1,5 @@
 import { Injectable, signal } from "@angular/core";
-import { BOSSES_MAP } from "../data/bosses";
+import { BOSSES_MAP } from "../../data/bosses";
 import { Boss } from "./models/boss";
 
 @Injectable({

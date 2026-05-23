@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
-import { BOSSES } from "../../../data/bosses";
+import { BOSSES } from "../../../../data/bosses";
 import { BossCard } from "./boss-card/boss-card";
 import { CardItem } from "./boss-card/card-item";
 import { BossService } from "../../boss-service";

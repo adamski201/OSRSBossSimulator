@@ -2,13 +2,14 @@ import { Injectable } from "@angular/core";
 import {
   AveragedSimulationResult,
   SimulationResult,
-} from "../simulation-engine/models/simulation-result";
-import { SimulationEngine } from "../simulation-engine/simulation-engine";
+} from "../../simulation-engine/models/simulation-result";
+import { SimulationEngine } from "../../simulation-engine/simulation-engine";
 import { Boss } from "./models/boss";
 import {
   SimulationConfig,
   SimulationTarget,
 } from "./pages/configure/simulation-configuration";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -36,41 +37,37 @@ export class SimulationService {
     return this.simulateUntilGreenlog(boss);
   }
 
-  runAveraged(boss: Boss, cfg: SimulationConfig): AveragedSimulationResult {
+  runAveraged(
+    boss: Boss,
+    cfg: SimulationConfig,
+  ): Observable<AveragedSimulationResult & { progress: number }> {
     if (cfg?.targetMode === SimulationTarget.Greenlog) {
-      return this.simulateUntilGreenlogAveraged(boss);
+      //return this.simulateUntilGreenlogAveraged(boss);
     } else if (
       cfg?.targetMode === SimulationTarget.NumberOfKills &&
       cfg.numberOfKills
     ) {
-      return this.simulateForKillsAveraged(boss, cfg.numberOfKills);
+      return this.simulationEngine.runForKillsAveraged$(
+        boss,
+        cfg.numberOfKills,
+        1_000_000,
+      );
     } else if (
       cfg?.targetMode === SimulationTarget.NumberOfItems &&
       cfg.items
     ) {
-      return this.simulateUntilItemsAveraged(boss, cfg.items);
+      //return this.simulateUntilItemsAveraged(boss, cfg.items);
     }
 
-    return this.simulateUntilGreenlogAveraged(boss);
+    return this.simulationEngine.runForKillsAveraged$(boss, 1);
   }
 
   private simulateUntilGreenlog(boss: Boss): SimulationResult {
     return this.simulationEngine.runUntilGreenlog(boss);
   }
 
-  private simulateUntilGreenlogAveraged(boss: Boss): AveragedSimulationResult {
-    return this.simulationEngine.runUntilGreenlogAveraged(boss);
-  }
-
   private simulateForKills(boss: Boss, kc: number): SimulationResult {
     return this.simulationEngine.runForKills(boss, kc);
-  }
-
-  private simulateForKillsAveraged(
-    boss: Boss,
-    kc: number,
-  ): AveragedSimulationResult {
-    return this.simulationEngine.runForKillsAveraged(boss, kc);
   }
 
   private simulateUntilItems(
@@ -78,12 +75,5 @@ export class SimulationService {
     itemQuantities: Map<number, number>,
   ): SimulationResult {
     return this.simulationEngine.runUntilItems(boss, itemQuantities);
-  }
-
-  private simulateUntilItemsAveraged(
-    boss: Boss,
-    itemQuantities: Map<number, number>,
-  ): AveragedSimulationResult {
-    return this.simulationEngine.runUntilItemsAveraged(boss, itemQuantities);
   }
 }

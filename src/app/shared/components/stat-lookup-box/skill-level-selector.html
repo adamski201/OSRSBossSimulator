@@ -1,0 +1,25 @@
+<input type="radio" id="level" [formField]="form.mode" value="level" /><label
+  for="level"
+  >Level</label
+>
+<input type="radio" id="xp" [formField]="form.mode" value="xp" /><label for="xp"
+  >XP</label
+>
+@if (form.mode().value() === "xp") {
+  <input
+    type="number"
+    [formField]="form.xp"
+    placeholder="Enter XP"
+    (input)="onXpChanged($event)"
+  />
+}
+@if (form.mode().value() === "level") {
+  <input
+    type="number"
+    [formField]="form.level"
+    placeholder="Enter Level"
+    (input)="onLevelChanged($event)"
+  />
+}
+
+{{ form().value() | json }}

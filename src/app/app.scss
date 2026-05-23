@@ -6,3 +6,8 @@
   justify-content: center;
   height: 100%;
 }
+
+.app-body {
+  display: flex;
+  height: calc(100% - 60px);
+}

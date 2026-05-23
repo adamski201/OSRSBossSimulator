@@ -3,10 +3,10 @@ import { RouterModule } from "@angular/router";
 import {
   AveragedSimulationResult,
   SimulationResult,
-} from "../../../simulation-engine/models/simulation-result";
+} from "../../../../simulation-engine/models/simulation-result";
 import { Boss } from "../../models/boss";
 
-import { ITEM_MAP } from "../../../data/items";
+import { ITEM_MAP } from "../../../../data/items";
 import { BossService } from "../../boss-service";
 import { Item } from "../../models/item";
 import { SimulationService } from "../../simulation-service";

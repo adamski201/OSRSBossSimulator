@@ -1,8 +1,16 @@
+:root {
+  --color-bg-main: #080c0e;
+  --color-bg-secondary: #11181d;
+  --color-bg-tertiary: #19242b;
+  --color-bg-border: #2c2c2c;
+}
+
 body,
 html {
+  height: 100%;
   margin: 0;
   padding: 0;
-  background-color: rgba(18, 18, 18);
+  background-color: var(--color-bg-main);
   color: white;
   font-family: Rubik, sans-serif;
 }

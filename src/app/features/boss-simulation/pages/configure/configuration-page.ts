@@ -1,10 +1,5 @@
-import { JsonPipe } from "@angular/common";
 import { Component, computed, inject, signal } from "@angular/core";
-import {
-  AbstractControl,
-  ReactiveFormsModule,
-  ValidatorFn,
-} from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 import {
   form,
   FormField,
@@ -15,7 +10,7 @@ import {
   submit,
 } from "@angular/forms/signals";
 import { Router } from "@angular/router";
-import { ITEM_MAP } from "../../../data/items";
+import { ITEM_MAP } from "../../../../data/items";
 import { BossService } from "../../boss-service";
 import { Boss } from "../../models/boss";
 import { SimulationService } from "../../simulation-service";
@@ -36,7 +31,7 @@ interface SimulationFormModel {
 
 @Component({
   selector: "app-configuration-page",
-  imports: [FormField, ReactiveFormsModule, ModeSelectCard],
+  imports: [FormField, ModeSelectCard],
   templateUrl: "./configuration-page.html",
   styleUrl: "./configuration-page.scss",
 })
@@ -45,7 +40,6 @@ export class ConfigurationPage {
 
   private router = inject(Router);
   private bossService = inject(BossService);
-  private simulationService = inject(SimulationService);
 
   private model = signal<SimulationFormModel>({
     simulationMode: SimulationMode.Timeline,

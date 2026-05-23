@@ -12,5 +12,5 @@ export interface SimulationResult {
 export interface AveragedSimulationResult {
   killCount: number;
   dropQuantities: Map<number, number>;
+  progress: number;
 }
-

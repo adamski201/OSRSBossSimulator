@@ -1,13 +1,15 @@
 .header-box {
-  min-height: 80px;
+  min-height: 60px;
   display: flex;
   align-items: center;
   padding-left: 30px;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-bg-border);
 }
 
 .header-text {
   color: white;
-  font-size: 40px;
+  font-size: 20px;
   font-weight: bold;
   cursor: pointer;
 }
