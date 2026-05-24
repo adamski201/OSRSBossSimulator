@@ -7,6 +7,10 @@ import {
 } from "./models/simulation-result";
 import { RandomProvider } from "./random-provider";
 import { SimulationContext } from "./simulation-context";
+import {
+  SimulationWorkerRequest,
+  SimulationWorkerResponse,
+} from "./simulation.worker";
 
 export class SimulationEngine {
   runForKills(boss: Boss, totalKills: number): SimulationResult {
@@ -32,42 +36,6 @@ export class SimulationEngine {
     };
   }
 
-  runForKillsAveraged$(
-    boss: Boss,
-    totalKills: number,
-    trials = 100_000,
-    chunkSize = 500,
-  ): Observable<AveragedSimulationResult & { progress: number }> {
-    return new Observable((observer) => {
-      const worker = new Worker(
-        new URL("./simulation.worker.ts", import.meta.url),
-        { type: "module" },
-      );
-
-      worker.onmessage = ({ data }) => {
-        const averagedDropQuantities = new Map<number, number>();
-        data.dropQuantities.forEach((qty: number, itemId: number) => {
-          averagedDropQuantities.set(itemId, qty / data.completed);
-        });
-
-        observer.next({
-          killCount: totalKills,
-          dropQuantities: averagedDropQuantities,
-          progress: data.completed / trials,
-        });
-
-        if (data.type === "complete") {
-          observer.complete();
-          worker.terminate();
-        }
-      };
-
-      worker.onerror = (err) => observer.error(err);
-      worker.postMessage({ boss, totalKills, trials, chunkSize });
-      return () => worker.terminate();
-    });
-  }
-
   runUntilGreenlog(boss: Boss): SimulationResult {
     const dropTable = boss.dropTable;
     const dropLogic = boss.dropLogic ?? this.getStandardDropLogic();
@@ -90,25 +58,6 @@ export class SimulationEngine {
       isGreenLogComplete: true,
     };
   }
-
-  // runUntilGreenlogAveraged(
-  //   boss: Boss,
-  //   trials = 100_000,
-  // ): AveragedSimulationResult {
-  //   let kc = 0;
-  //   const dropQuantities = new Map<number, number>();
-
-  //   for (let i = 0; i < trials; i++) {
-  //     const result = this.runUntilGreenlog(boss);
-
-  //     kc += result.killCount;
-  //     result.dropQuantities.forEach((qty, itemId) => {
-  //       dropQuantities.set(itemId, dropQuantities.get(itemId) ?? 0 + qty);
-  //     });
-  //   }
-
-  //   return { killCount: kc / trials, dropQuantities };
-  // }
 
   runUntilItems(
     boss: Boss,
@@ -146,25 +95,84 @@ export class SimulationEngine {
     };
   }
 
-  // runUntilItemsAveraged(
-  //   boss: Boss,
-  //   itemQuantities: Map<number, number>,
-  //   trials = 100000,
-  // ): AveragedSimulationResult {
-  //   let kc = 0;
-  //   const dropQuantities = new Map<number, number>();
+  runForKillsAveraged(
+    boss: Boss,
+    totalKills: number,
+    trials = 100_000,
+    chunkSize = 500,
+  ): Observable<AveragedSimulationResult> {
+    const request: SimulationWorkerRequest = {
+      type: "kills",
+      boss,
+      totalKills,
+      trials,
+      chunkSize,
+    };
+    return this.runAveragedSimulation(request);
+  }
 
-  //   for (let i = 0; i < trials; i++) {
-  //     const result = this.runUntilItems(boss, itemQuantities);
+  runUntilGreenlogAveraged(
+    boss: Boss,
+    trials = 100_000,
+    chunkSize = 500,
+  ): Observable<AveragedSimulationResult> {
+    const request: SimulationWorkerRequest = {
+      type: "greenlog",
+      boss,
+      trials,
+      chunkSize,
+    };
+    return this.runAveragedSimulation(request);
+  }
 
-  //     kc += result.killCount;
-  //     result.dropQuantities.forEach((qty, itemId) => {
-  //       dropQuantities.set(itemId, dropQuantities.get(itemId) ?? 0 + qty);
-  //     });
-  //   }
+  runUntilItemsAveraged(
+    boss: Boss,
+    itemQuantities: Map<number, number>,
+    trials = 100_000,
+    chunkSize = 500,
+  ): Observable<AveragedSimulationResult> {
+    const request: SimulationWorkerRequest = {
+      type: "items",
+      boss,
+      itemQuantities,
+      trials,
+      chunkSize,
+    };
+    return this.runAveragedSimulation(request);
+  }
 
-  //   return { killCount: kc / trials, dropQuantities };
-  // }
+  private runAveragedSimulation(
+    request: SimulationWorkerRequest,
+  ): Observable<AveragedSimulationResult> {
+    return new Observable((observer) => {
+      const worker = new Worker(
+        new URL("./simulation.worker.ts", import.meta.url),
+        { type: "module" },
+      );
+
+      worker.onmessage = ({ data }: MessageEvent<SimulationWorkerResponse>) => {
+        const averagedDropQuantities = new Map<number, number>();
+        data.dropQuantities.forEach((qty: number, itemId: number) => {
+          averagedDropQuantities.set(itemId, qty / data.completed);
+        });
+
+        observer.next({
+          killCount: data.accumulatedKillCount / data.completed,
+          dropQuantities: averagedDropQuantities,
+          progress: data.completed / request.trials,
+        });
+
+        if (data.type === "complete") {
+          observer.complete();
+          worker.terminate();
+        }
+      };
+
+      worker.onerror = (err) => observer.error(err);
+      worker.postMessage(request);
+      return () => worker.terminate();
+    });
+  }
 
   private getStandardDropLogic() {
     return new StandardDropLogic(new RandomProvider());

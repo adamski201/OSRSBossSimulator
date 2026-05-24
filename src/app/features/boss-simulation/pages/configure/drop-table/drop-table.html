@@ -1,7 +1,7 @@
 <div class="drop-table">
   <table class="items-table">
     <thead>
-      <tr>
+      <tr class="table-header">
         <th>Item</th>
         <th>Quantity</th>
       </tr>
@@ -14,32 +14,13 @@
             <span>{{ item.name }}</span>
           </td>
           <td class="quantity-input">
-            @if (isReadonly) {
-              <span class="quantity-display">
-                {{ quantities()?.[i] || 0 }}
-              </span>
-            } @else {
-              <input
-                type="number"
-                [formControl]="formArray()!.at(i)"
-                min="0"
-                class="quantity-field"
-                [class.invalid]="
-                  formArray()!.at(i).invalid && formArray()!.at(i).touched
-                "
-              />
-
-              @if (formArray()!.at(i).invalid && formArray()!.at(i).touched) {
-                <div class="error-message">
-                  @if (formArray()!.at(i).errors?.["required"]) {
-                    Quantity is required
-                  }
-                  @if (formArray()!.at(i).errors?.["min"]) {
-                    Quantity must be at least 0
-                  }
-                </div>
-              }
-            }
+            <input
+              type="number"
+              min="0"
+              class="quantity-field"
+              [value]="value().get(item.id) || 0"
+              (input)="onQuantityChange(item.id, +$event.target.value || 0)"
+            />
           </td>
         </tr>
       }

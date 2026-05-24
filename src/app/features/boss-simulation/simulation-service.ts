@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 import {
   AveragedSimulationResult,
   SimulationResult,
@@ -9,7 +10,6 @@ import {
   SimulationConfig,
   SimulationTarget,
 } from "./pages/configure/simulation-configuration";
-import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -42,24 +42,20 @@ export class SimulationService {
     cfg: SimulationConfig,
   ): Observable<AveragedSimulationResult & { progress: number }> {
     if (cfg?.targetMode === SimulationTarget.Greenlog) {
-      //return this.simulateUntilGreenlogAveraged(boss);
+      return this.simulationEngine.runUntilGreenlogAveraged(boss);
     } else if (
       cfg?.targetMode === SimulationTarget.NumberOfKills &&
       cfg.numberOfKills
     ) {
-      return this.simulationEngine.runForKillsAveraged$(
-        boss,
-        cfg.numberOfKills,
-        1_000_000,
-      );
+      return this.simulationEngine.runForKillsAveraged(boss, cfg.numberOfKills);
     } else if (
       cfg?.targetMode === SimulationTarget.NumberOfItems &&
       cfg.items
     ) {
-      //return this.simulateUntilItemsAveraged(boss, cfg.items);
+      return this.simulationEngine.runUntilItemsAveraged(boss, cfg.items);
     }
 
-    return this.simulationEngine.runForKillsAveraged$(boss, 1);
+    return this.simulationEngine.runForKillsAveraged(boss, 1);
   }
 
   private simulateUntilGreenlog(boss: Boss): SimulationResult {

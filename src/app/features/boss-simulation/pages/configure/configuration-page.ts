@@ -20,18 +20,20 @@ import {
   SimulationMode,
   SimulationTarget,
 } from "./simulation-configuration";
+import { DropTable } from "./drop-table/drop-table";
+import { JsonPipe } from "@angular/common";
 
 interface SimulationFormModel {
   simulationMode: SimulationMode;
   targetMode: SimulationTarget;
   numberOfKills: number;
-  numberOfItems: number[];
+  numberOfItems: Map<number, number>; // Map of item ID to quantity
   iterations: number;
 }
 
 @Component({
   selector: "app-configuration-page",
-  imports: [FormField, ModeSelectCard],
+  imports: [FormField, ModeSelectCard, DropTable],
   templateUrl: "./configuration-page.html",
   styleUrl: "./configuration-page.scss",
 })
@@ -45,11 +47,11 @@ export class ConfigurationPage {
     simulationMode: SimulationMode.Timeline,
     targetMode: SimulationTarget.Greenlog,
     numberOfKills: 100,
-    numberOfItems: [],
+    numberOfItems: new Map<number, number>(),
     iterations: 10000,
   });
 
-  simulationForm = form(this.model, (simulation) => {
+  protected simulationForm = form(this.model, (simulation) => {
     min(simulation.numberOfKills, 1, { message: "Must be at least 1" });
     max(simulation.numberOfKills, 100000, {
       message: "Must be at most 100,000",
@@ -74,7 +76,7 @@ export class ConfigurationPage {
     );
   });
 
-  bossItems = computed(() =>
+  protected bossItems = computed(() =>
     this.boss()!.dropTable.map((item) => ITEM_MAP.get(item.id)!),
   );
 
@@ -82,7 +84,7 @@ export class ConfigurationPage {
     this.boss.set(this.bossService.selectedBoss());
   }
 
-  onSubmit() {
+  protected onSubmit() {
     submit(this.simulationForm, async (form) => {
       const config = this.mapFormToDomainModel(form().value());
 
@@ -98,12 +100,11 @@ export class ConfigurationPage {
   }
 
   private mapFormToDomainModel(value: SimulationFormModel): SimulationConfig {
-    const items = new Map(
-      value.numberOfItems.map((quantity, index) => [
-        this.bossItems()[index].id,
-        quantity,
-      ]),
-    );
+    const items = new Map<number, number>();
+
+    for (const [itemId, quantity] of value.numberOfItems.entries()) {
+      items.set(itemId, quantity);
+    }
 
     return {
       simulationMode: value.simulationMode,

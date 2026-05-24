@@ -1,0 +1,15 @@
+img {
+  width: 24px;
+  height: 24px;
+}
+
+.drop-table {
+  .items-table {
+    .item-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-right: 12px;
+    }
+  }
+}

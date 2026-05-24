@@ -1,32 +1,34 @@
 <form (submit)="onSubmit()" class="form-container">
-  <h2>Simulation Mode</h2>
-  <div class="mode-card-container">
-    <app-mode-select-card
-      title="Timeline"
-      mode="timeline"
-      description="Generate a timeline of drops and statistics."
-      imageUrl=""
-      [isSelected]="simulationForm().value().simulationMode === 'timeline'"
-      [formField]="simulationForm.simulationMode"
-    ></app-mode-select-card>
-    <app-mode-select-card
-      title="Average"
-      mode="average"
-      description="Calculate average drops and statistics."
-      imageUrl=""
-      [isSelected]="simulationForm().value().simulationMode === 'average'"
-      [formField]="simulationForm.simulationMode"
-    ></app-mode-select-card>
-  </div>
+  <div class="form-section">
+    <h2>Simulation Mode</h2>
+    <div class="mode-card-container">
+      <app-mode-select-card
+        title="Timeline"
+        mode="timeline"
+        description="Generate a timeline of drops and statistics."
+        imageUrl=""
+        [isSelected]="simulationForm().value().simulationMode === 'timeline'"
+        [formField]="simulationForm.simulationMode"
+      ></app-mode-select-card>
+      <app-mode-select-card
+        title="Average"
+        mode="average"
+        description="Calculate average drops and statistics."
+        imageUrl=""
+        [isSelected]="simulationForm().value().simulationMode === 'average'"
+        [formField]="simulationForm.simulationMode"
+      ></app-mode-select-card>
+    </div>
 
-  <label
-    [style.visibility]="
-      simulationForm.iterations().hidden() ? 'hidden' : 'visible'
-    "
-  >
-    <input type="number" [formField]="simulationForm.iterations" />
-    Trials
-  </label>
+    <label
+      [style.visibility]="
+        simulationForm.iterations().hidden() ? 'hidden' : 'visible'
+      "
+    >
+      <input type="number" [formField]="simulationForm.iterations" />
+      Trials
+    </label>
+  </div>
 
   <h2>Simulation Target</h2>
   <div class="mode-card-container">
@@ -66,11 +68,11 @@
   </label>
 
   @if (!simulationForm.numberOfItems().hidden()) {
-    <!-- <app-drop-table
+    <app-drop-table
+      [(value)]="simulationForm.numberOfItems().value"
       [items]="bossItems()"
-      [formArray]="simulationForm.controls.numberOfItems"
     >
-    </app-drop-table> -->
+    </app-drop-table>
   }
 
   <button class="submit-button">Run Simulation</button>
